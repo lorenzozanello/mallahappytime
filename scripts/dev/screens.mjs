@@ -1,0 +1,46 @@
+import { chromium, devices } from '@playwright/test';
+import { rmSync } from 'node:fs';
+const OUT = process.env.SHOTS;
+const base = 'http://localhost:3000';
+const browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || undefined });
+async function run(name, ctxOpts, steps) {
+  rmSync('.data/demo', { recursive: true, force: true });
+  const ctx = await browser.newContext(ctxOpts);
+  const page = await ctx.newPage();
+  const errors = [];
+  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+  page.on('pageerror', (e) => errors.push(e.message));
+  await steps(page, async (label) => { await page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => console.log('no idle', label)); await page.waitForTimeout(400); return page.screenshot({ path: `${OUT}/${name}-${label}.png`, fullPage: true }); });
+  if (errors.length) console.log(name, 'ERRORS', errors);
+  await ctx.close();
+}
+const flow = async (page, shot) => {
+  await page.goto(base + '/ingresar'); await shot('01-login');
+  await page.getByRole('button', { name: 'Entrar' }).click();
+  await page.waitForURL(base + '/'); await shot('02-onboarding');
+  await page.getByText('Step 2', { exact: true }).first().click();
+  await page.getByText('Periodo III').click();
+  await page.getByRole('button', { name: 'Guardar' }).click();
+  await page.waitForURL(base + '/'); await shot('03-inicio');
+  await page.getByRole('link', { name: /Ver experiencia/ }).click(); await page.waitForLoadState('networkidle'); await shot('04-quick');
+  await page.getByRole('tab', { name: 'Ficha completa' }).click(); await page.waitForURL(/vista=completa/); await shot('05-full');
+  await page.goto(base + '/malla?q=actividades+literarias'); await shot('06-search');
+  await page.goto(base + '/malla'); await shot('07-malla');
+  await page.goto(base + '/happy'); await shot('08-happy-empty');
+  await page.getByRole('radio', { name: /Aterrizar/ }).click();
+  await page.getByLabel('Mensaje para Happy').fill('Quiero hacer algo con agua mañana, tengo 20 minutos.');
+  await page.getByRole('button', { name: 'Enviar a Happy' }).click();
+  await page.getByText('Caminos posibles').waitFor(); await shot('09-happy-paths');
+  await page.getByRole('button', { name: 'Desarrollar este camino' }).first().click();
+  await page.getByText('Desarrollo', { exact: true }).waitFor(); await shot('10-happy-dev');
+  await page.getByRole('button', { name: 'Guardar idea' }).last().click();
+  await page.getByText('Guardada').waitFor();
+  await page.goto(base + '/guardados?tab=ideas'); await shot('11-guardados');
+  await page.goto(base + '/progresion'); await shot('12-progresion');
+  await page.goto(base + '/perfil'); await shot('13-perfil');
+};
+await run('mobile', { ...devices['Pixel 7'] }, flow);
+await run('desktop', { viewport: { width: 1366, height: 900 } }, flow);
+await run('public', { ...devices['Pixel 7'] }, async (page, shot) => { await page.goto(base + '/institucional'); await shot('institucional'); });
+await browser.close();
+console.log('done');

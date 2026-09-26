@@ -12,6 +12,8 @@ export default defineConfig({
     baseURL: `http://localhost:${PORT}`,
     trace: 'retain-on-failure',
     locale: 'es-CO',
+    // Allows using a preinstalled Chromium (e.g. sandboxed environments); CI installs its own.
+    launchOptions: { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || undefined },
   },
   projects: [
     { name: 'mobile', use: { ...devices['Pixel 7'] } },

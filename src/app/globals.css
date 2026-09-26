@@ -1,0 +1,153 @@
+@import 'tailwindcss';
+
+/*
+ * Happy Time design tokens. Brand colors are used with restraint: reading
+ * surfaces stay white; fuchsia marks primary actions, violet identifies Happy,
+ * teal identifies official curriculum ("Desde nuestra malla").
+ */
+@theme {
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+
+  --color-canvas: #faf8f5;
+  --color-surface: #ffffff;
+  --color-line: #e8e3dc;
+  --color-line-strong: #d6cfc5;
+  --color-ink: #1f1d1a;
+  --color-ink-soft: #4b4640;
+  --color-ink-muted: #6b645c;
+
+  --color-brand: #c2126b; /* fuchsia, AA on white */
+  --color-brand-strong: #9d0c56;
+  --color-brand-soft: #fdeef5;
+  --color-sun: #ffe14d;
+  --color-sun-soft: #fff8d6;
+
+  --color-happy: #6d28d9; /* solid purple for Happy */
+  --color-happy-strong: #5b21b6;
+  --color-happy-soft: #f3eefe;
+
+  --color-official: #0f6b63; /* teal: official curriculum */
+  --color-official-soft: #e7f4f1;
+
+  --color-warn: #8a5a00;
+  --color-warn-soft: #fff4dc;
+  --color-danger: #b42318;
+
+  --radius-card: 1rem;
+  --shadow-card: 0 1px 2px rgb(31 29 26 / 0.05), 0 1px 1px rgb(31 29 26 / 0.03);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01';
+    line-height: 1.55;
+  }
+  :focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-brand) 70%, white);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  mark {
+    background: var(--color-sun-soft);
+    color: inherit;
+    border-radius: 3px;
+    padding: 0 1px;
+    box-shadow: inset 0 -2px 0 var(--color-sun);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+  }
+  .eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.55rem 1rem;
+    border-radius: 0.75rem;
+    font-weight: 650;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+    cursor: pointer;
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background: var(--color-brand);
+    color: white;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-brand-strong);
+  }
+  .btn-happy {
+    background: var(--color-happy);
+    color: white;
+  }
+  .btn-happy:hover:not(:disabled) {
+    background: var(--color-happy-strong);
+  }
+  .btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    border: 1px solid var(--color-line-strong);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    border-color: var(--color-ink-muted);
+  }
+  .btn-ghost {
+    color: var(--color-ink-soft);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background: #f1ede7;
+  }
+  .field {
+    width: 100%;
+    min-height: 44px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 0.75rem;
+    background: var(--color-surface);
+    padding: 0.6rem 0.8rem;
+    font-size: 1rem;
+    color: var(--color-ink);
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 3px var(--color-brand-soft);
+  }
+  .prose-curriculum p + p {
+    margin-top: 0.6rem;
+  }
+}
