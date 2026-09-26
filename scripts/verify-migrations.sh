@@ -25,6 +25,6 @@ echo "→ seed.sql"
 echo "→ seed.sql (segunda vez: idempotencia)"
 "${PSQL[@]}" -f "$ROOT/supabase/seed.sql"
 echo "→ aserciones RLS"
-"${PSQL[@]}" -f "$ROOT/supabase/tests/rls_assertions.sql"
+(cd "$ROOT" && "${PSQL[@]}" -f supabase/tests/rls_assertions.sql)
 "${PSQL[@]}" -t -c "select 'chunks: ' || count(*) from public.curriculum_chunks"
 echo "Migraciones verificadas."

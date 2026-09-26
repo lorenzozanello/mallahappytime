@@ -17,9 +17,9 @@
     "test:e2e": "playwright test",
     "curriculum:import": "tsx scripts/import-curriculum.ts",
     "curriculum:check": "tsx scripts/import-curriculum.ts --check",
-    "curriculum:embed": "tsx scripts/embed-curriculum.ts",
+    "curriculum:embed": "tsx --conditions=react-server scripts/embed-curriculum.ts",
     "db:verify": "bash scripts/verify-migrations.sh",
-    "eval:happy": "tsx scripts/run-happy-evals.ts"
+    "eval:happy": "tsx --conditions=react-server scripts/run-happy-evals.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.65",

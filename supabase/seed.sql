@@ -4,12 +4,12 @@
 
 begin;
 
+update public.curriculum_versions set status = 'retired' where id <> 'ht-malla-2026-06' and status = 'active';
+
 insert into public.curriculum_versions (id, label, effective_date, source_file, source_sha256, status)
 values ('ht-malla-2026-06', 'Malla Happy Time · Versión final junio 2026', '2026-06-01', 'Malla_HT_Version_Final_Junio_2026.xlsx', 'dbfd2fd8cc24ba8ae96117de9a4ed3206452d1a01e4242f8ed9511c109a8f8ca', 'active')
 on conflict (id) do update set label = excluded.label, effective_date = excluded.effective_date,
   source_file = excluded.source_file, source_sha256 = excluded.source_sha256, status = 'active', imported_at = now();
-
-update public.curriculum_versions set status = 'retired' where id <> 'ht-malla-2026-06' and status = 'active';
 
 insert into public.curriculum_levels (version_id, id, code, name, sort_order, cycle, equivalence, entry_age, exit_age, entry_profile, exit_profile, source_row)
 values ('ht-malla-2026-06', 'step-1', 'S1', 'Step 1', 1, 'Ciclo I: educación inicial antes de los 3 años', 'Maternal', '1 año', '2 años', 'Niño o niña en transición hacia la exploración activa: depende del adulto como base de seguridad, explora con cuerpo y sentidos, se comunica con gestos, miradas, balbuceos, palabras iniciales y juego espontáneo. Requiere acompañamiento constante en regulación, autocuidado, alimentación, higiene y participación en rutinas.', 'Niño o niña que ha consolidado vínculo de confianza con el entorno escolar, usa el cuerpo y lenguaje emergente para explorar y comunicar, participa en rutinas simples, muestra autonomía básica, inicia juego compartido y reconoce emociones básicas con apoyo adulto.', 2)

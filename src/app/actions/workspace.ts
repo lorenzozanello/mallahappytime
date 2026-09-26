@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
-import { getExperienceById, isLevelId, isPeriod } from '@/lib/curriculum';
+import { getExperience, getExperienceById, isLevelId, isPeriod } from '@/lib/curriculum';
 import { buildQuickView } from '@/lib/curriculum/quick-view';
 import { requireSession } from '@/lib/auth/session';
 import { ideaToPlanningContent, rehydrateIdea, savedIdeaPayloadSchema } from '@/lib/happy/saved-idea';
@@ -73,10 +73,7 @@ export async function createPlanFromExperience(experienceId: string) {
 
 export async function createBlankPlan() {
   const { profile, repo } = await requireSession();
-  const exp =
-    profile.activeLevelId && profile.activePeriod
-      ? (await import('@/lib/curriculum')).getExperience(profile.activeLevelId, profile.activePeriod)
-      : undefined;
+  const exp = profile.activeLevelId && profile.activePeriod ? getExperience(profile.activeLevelId, profile.activePeriod) : undefined;
   const plan = await repo.createPlan(profile.id, {
     title: 'Nueva planeación',
     levelId: exp?.levelId ?? null,

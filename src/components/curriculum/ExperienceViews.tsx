@@ -46,7 +46,7 @@ export function QuickView({ experience }: { experience: CurriculumExperience }) 
   );
 }
 
-function field(e: CurriculumExperience, key: ExperienceFieldKey) {
+function field(key: ExperienceFieldKey) {
   return EXPERIENCE_FIELDS.find((f) => f.key === key)!;
 }
 
@@ -61,7 +61,7 @@ function SourceLine({ id }: { id: string }) {
 }
 
 function FieldBlock({ e, k, asList, anchor }: { e: CurriculumExperience; k: ExperienceFieldKey; asList?: boolean; anchor?: string }) {
-  const def = field(e, k);
+  const def = field(k);
   const items = asList ? splitItems(e.fields[k], def.split) : [];
   return (
     <div id={anchor ?? k} className="scroll-mt-24 border-t border-line pt-4 first:border-t-0 first:pt-0">
@@ -167,7 +167,7 @@ export function FullView({ experience: e }: { experience: CurriculumExperience }
                     </div>
                   ))}
                 </dl>
-                <SourceLine id={`${e.id}-${field(e, a.key).code}`} />
+                <SourceLine id={`${e.id}-${field(a.key).code}`} />
               </div>
             );
           })}

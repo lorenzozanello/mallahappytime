@@ -1,0 +1,13 @@
+# Decisiones
+
+1. **Migrar de Vite a Next.js (App Router).** El repositorio entregado era una SPA Vite con el currículo copiado a mano en TypeScript y un asistente simulado. Happy necesita un servidor para proteger claves y validar salidas; Next.js en Vercel da rutas de servidor, server actions y despliegue directo. Se conservaron el dominio (niveles, periodos, matriz de desarrollo, vista institucional, footer institucional) y se reemplazó el dato hardcodeado por la importación del Excel.
+2. **El Excel es la única fuente**: corpus generado, versionado en git y verificado en CI (`curriculum:check`) y en pruebas de paridad. Los logos del zip estaban corruptos (bytes UTF-8 de reemplazo); se usaron los recursos entregados en la conversación.
+3. **Currículo servido desde el corpus, no desde la BD.** Son ~0,7 MB estáticos por versión; leerlos en proceso es más rápido, funciona igual en pruebas/demos y evita duplicar verdades (la BD tiene exactamente los mismos IDs y hashes para búsqueda semántica).
+4. **Búsqueda híbrida con BM25 en proceso + pgvector/FTS en Supabase + RRF.** El corpus es pequeño (587 fragmentos); el BM25 en proceso permite la capa de vocabulario docente y funciona sin credenciales. La pierna vectorial/FTS se activa cuando hay Supabase y embeddings. Sin base de datos vectorial separada ni LangChain.
+5. **Vista rápida determinista.** Se arma con fragmentos literales (procesos imprescindibles, temas de actividades rectoras, indicadores, DUA, familia): fiel por construcción, sin costo ni latencia de IA.
+6. **Modelo por defecto `anthropic/claude-sonnet-5` vía AI Gateway (provisional).** Prioridad: calidad suficiente para asistencia pedagógica anclada, español natural y salida estructurada confiable. Es más costoso que opciones pequeñas; candidatas a comparar con `npm run eval:happy -- --generate`: `anthropic/claude-haiku-4.5`, `google/gemini-3.8-flash`, `openai/gpt-6-luna`. **No se verificó con un modelo real** (sin credenciales en este entorno): la elección definitiva debe salir de la evaluación. Cambiar de modelo = cambiar `HAPPY_MODEL`.
+7. **Respuestas no transmitidas en streaming (V1).** Salida estructurada validada completa antes de mostrarse; estado de carga honesto. Streaming parcial queda como mejora.
+8. **Observabilidad solo de metadatos**; el contenido solo se guarda si la docente lo guarda.
+9. **Modo demo explícito** (archivo JSON + selector de rol) para desarrollo, e2e y vistas previas sin credenciales; nunca silencioso.
+10. **Periodo activo elegido por la docente**: el Excel no define fechas por periodo.
+11. **Nivel "Kínder"**: nombre de la hoja principal; "Jardín/Kínder" de la hoja de progresión se mapea al mismo nivel (documentado).

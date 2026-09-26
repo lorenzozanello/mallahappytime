@@ -89,3 +89,15 @@ do $$ begin
   assert (select active_period from public.profiles where id = '00000000-0000-0000-0000-00000000000a') = 3, 'teacher updated own period';
 end $$;
 select 'RLS assertions passed' as result;
+
+-- A new curriculum release must be importable over the current one (seed ordering).
+insert into public.curriculum_versions (id, label, effective_date, source_file, source_sha256, status)
+  values ('ht-malla-previa', 'Versión previa (prueba)', '2025-06-01', 'x.xlsx', 'x', 'retired');
+update public.curriculum_versions set status = 'retired' where id = 'ht-malla-2026-06';
+update public.curriculum_versions set status = 'active' where id = 'ht-malla-previa';
+\i supabase/seed.sql
+do $$ begin
+  assert (select id from public.curriculum_versions where status = 'active') = 'ht-malla-2026-06', 'seed re-activates its version';
+  assert (select status from public.curriculum_versions where id = 'ht-malla-previa') = 'retired', 'previous version retired';
+end $$;
+select 'Version switch passed' as result;

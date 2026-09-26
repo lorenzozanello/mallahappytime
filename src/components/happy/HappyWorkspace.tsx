@@ -56,7 +56,6 @@ export function HappyWorkspace({
   const [draft, setDraft] = useState(initialMessage ?? '');
   const [busy, setBusy] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
   const current = modes.find((m) => m.key === mode)!;
 
   useEffect(() => {
@@ -223,7 +222,6 @@ export function HappyWorkspace({
           </label>
           <textarea
             id="happy-input"
-            ref={inputRef}
             value={draft}
             onChange={(ev) => setDraft(ev.target.value)}
             onKeyDown={(ev) => {
