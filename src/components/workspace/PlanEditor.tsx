@@ -147,9 +147,9 @@ export function PlanEditor({ id, initialTitle, initialContent, context, contextL
       {PLANNING_FIELDS.map((f) => {
         const a = f.key !== 'notes' ? assist[f.key as AssistField] : undefined;
         return (
-          <section key={f.key} className="card p-4" aria-labelledby={`f-${f.key}`}>
+          <section key={f.key} className="card p-4">
             <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-              <label id={`f-${f.key}`} htmlFor={`in-${f.key}`} className="font-bold">
+              <label htmlFor={`in-${f.key}`} className="font-bold">
                 {f.label}
                 <span className="block text-xs font-normal text-ink-muted">{f.hint}</span>
               </label>
